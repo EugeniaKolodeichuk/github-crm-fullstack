@@ -3,12 +3,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, githubUsername } = req.body;
     try {
         const hashed = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, password: hashed });
+        const user = await User.create({ username, password: hashed, githubUsername });
         res.status(201).json({ msg: 'Registered successfully' });
-    } catch {
+    } catch (error) {
+        console.error(error);
         res.status(400).json({ msg: 'Registration failed' });
     }
 };
@@ -17,6 +18,8 @@ exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ msg: 'Invalid credentials' });
 
@@ -24,7 +27,8 @@ exports.login = async (req, res) => {
             expiresIn: '1d'
         });
         res.json({ token });
-    } catch {
+    } catch (error) {
+        console.error(error);
         res.status(400).json({ msg: 'Login failed' });
     }
 };
