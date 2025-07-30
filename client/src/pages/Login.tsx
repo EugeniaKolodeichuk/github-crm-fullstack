@@ -82,7 +82,7 @@ const Login = () => {
                 )}
                 <button
                     type="submit"
-                    className="bg-[#23C6DB] text-white py-2 px-4 rounded cursor-pointer"
+                    className="bg-[#23C6DB] text-black text-xl font-bold py-2 px-4 rounded cursor-pointer"
                 >
                     {isRegistering ? 'Register' : 'Login'}
                 </button>

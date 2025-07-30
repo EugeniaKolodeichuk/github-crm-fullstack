@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { syncReposInBackground } = require('./repoController');
 
 exports.register = async (req, res) => {
     const { username, password, githubUsername } = req.body;
@@ -26,6 +27,9 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: '1d'
         });
+
+        await syncReposInBackground(user);
+
         res.json({ token });
     } catch (error) {
         console.error(error);

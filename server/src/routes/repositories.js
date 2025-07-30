@@ -2,16 +2,15 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/authMiddleware');
 const {
+    syncRepos,
     getAllRepositories,
-    createRepository,
-    updateRepository,
-    deleteRepository
+    deleteRepository,
+    updateRepository
 } = require('../controllers/repoController');
 
-router.use(auth);
-router.get('/', getAllRepositories);
-router.post('/', createRepository);
-router.put('/:id', updateRepository);
-router.delete('/:id', deleteRepository);
+router.get('/sync', auth, syncRepos);
+router.get('/', auth, getAllRepositories);
+router.put('/:id', auth, updateRepository);
+router.delete('/:id', auth, deleteRepository);
 
 module.exports = router;
