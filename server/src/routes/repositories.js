@@ -5,11 +5,13 @@ const {
     syncRepos,
     getAllRepositories,
     deleteRepository,
-    updateRepository
+    updateRepository,
+    createRepository
 } = require('../controllers/repoController');
 
 router.get('/sync', auth, syncRepos);
 router.get('/', auth, getAllRepositories);
+router.post('/', auth, createRepository);
 router.put('/:id', auth, updateRepository);
 router.delete('/:id', auth, deleteRepository);
 

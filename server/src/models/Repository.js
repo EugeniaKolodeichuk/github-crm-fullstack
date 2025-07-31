@@ -11,6 +11,7 @@ const RepositorySchema = new mongoose.Schema({
     forks: { type: Number },
     open_issues: { type: Number },
     created_at: { type: Number },
+    isPrivate: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Repository', RepositorySchema);
