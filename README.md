@@ -36,27 +36,27 @@
 
 
 ## Environment Variables
-> Create a `.env` file in `server/` folder:
+**Create a `.env` file in `server/` folder:**
 ```
 PORT=5000
 JWT_SECRET=
 MONGO_URI=
 ```
 
-> Create a `.env` file in `client/` folder:
+**Create a `.env` file in `client/` folder:**
 ```
 VITE_API_BASE_URL=http://localhost:5000
 ```
 
 
 ## Getting Started with Docker
-> Install Docker and Docker Compose
-> Clone this repository
+**Install Docker and Docker Compose**
+**Clone this repository**
 
 > [!WARNING]
 > Before running add envs to client and server
 
-> Run 
+**Run**
 ```
 docker-compose up --build
 ```
@@ -65,16 +65,16 @@ docker-compose up --build
 *backend: Express API (available at http://localhost:5000)*
 
 ## Access App
-> Register with email + GitHub username
-> Paste your GitHub token when creating repos
-> View repository cards
+**Register with email + GitHub username**
+**Paste your GitHub token when creating repos**
+**View repository cards**
 
 
 # Project Features
-## Secure login with hashed passwords & JWT
-## GitHub sync after login
-## Responsive Tailwind UI
-## Create repo on GitHub & store in DB
-## Delete repo from local DB (not from GitHub)
-## Creation date in UTC Unix format
-## Only public repos shown in cards
+- Secure login with hashed passwords & JWT
+- GitHub sync after login
+- Responsive Tailwind UI
+- Create repo on GitHub & store in DB
+- Delete repo from local DB (not from GitHub)
+- Creation date in UTC Unix format
+- Only public repos shown in cards
