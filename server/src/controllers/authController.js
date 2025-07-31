@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 const { syncReposInBackground } = require('./repoController');
 
 exports.register = async (req, res) => {
-    const { username, password, githubUsername } = req.body;
+    const { email, password, githubUsername } = req.body;
     try {
         const hashed = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, password: hashed, githubUsername });
+        const user = await User.create({ email, password: hashed, githubUsername });
         res.status(201).json({ msg: 'Registered successfully' });
     } catch (error) {
         console.error(error);
@@ -16,9 +16,9 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ msg: 'User not found' });
 
         const isMatch = await bcrypt.compare(password, user.password);
