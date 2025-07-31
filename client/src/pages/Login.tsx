@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ClimbingBoxLoader } from 'react-spinners';
+import LoginForm from '../components/LoginForm';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,12 +11,18 @@ const Login = () => {
     const [error, setError] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         setIsAuthenticated(Boolean(token));
     }, []);
+
+    const isValidEmail = (email: string) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,6 +41,7 @@ const Login = () => {
             setError('GitHub username is required for registration');
             return;
         }
+        setLoading(true);
 
         try {
             const url = isRegistering
@@ -56,84 +65,43 @@ const Login = () => {
             }
         } catch {
             setError(isRegistering ? 'Registration failed' : 'Login failed');
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (isAuthenticated) {
-        return (
-            <div className="p-8 max-w-md mx-auto text-center">
-                <h2 className="text-2xl font-semibold mb-4">Let`s return to your <a href="/" className="text-[#23C6DB] cursor-pointer">repositories</a></h2>
+    return <div className="p-8 max-w-md mx-auto">
+        {isAuthenticated ? (
+            <div className="text-center">
+                <h2 className="text-2xl font-semibold mb-4">
+                    Let’s return to your{' '}
+                    <a href="/" className="text-[#23C6DB] cursor-pointer">
+                        repositories
+                    </a>
+                </h2>
             </div>
-        );
-    }
-
-    const isValidEmail = (value: string) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-
-    return (
-        <div className="p-8 max-w-md mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">
-                {isRegistering ? 'Register' : 'Login'}
-            </h2>
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    className="input border rounded px-4 py-2"
-                />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    className="input border rounded px-4 py-2"
-                />
-                {isRegistering && (
-                    <input
-                        type="text"
-                        value={githubUsername}
-                        onChange={(e) => setGithubUsername(e.target.value)}
-                        placeholder="GitHub Username"
-                        className="input border rounded px-4 py-2"
-                    />
-                )}
-                <button
-                    type="submit"
-                    className="bg-[#23C6DB] text-black text-xl font-bold py-2 px-4 rounded cursor-pointer"
-                >
-                    {isRegistering ? 'Register' : 'Login'}
-                </button>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <p className="text-sm mt-2">
-                    {isRegistering ? (
-                        <>
-                            Already have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={() => { setIsRegistering(false); setError('') }}
-                                className="text-[#23C6DB] cursor-pointer"
-                            >
-                                Login
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            Don't have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={() => { setIsRegistering(true); setError('') }}
-                                className="text-[#23C6DB] cursor-pointer"
-                            >
-                                Register
-                            </button>
-                        </>
-                    )}
-                </p>
-            </form>
-        </div>
-    )
+        ) : loading ? (
+            <div className="flex justify-center mt-20">
+                <ClimbingBoxLoader />
+            </div>
+        ) : (
+            <LoginForm
+                email={email}
+                password={password}
+                githubUsername={githubUsername}
+                isRegistering={isRegistering}
+                error={error}
+                onEmailChange={setEmail}
+                onPasswordChange={setPassword}
+                onGithubUsernameChange={setGithubUsername}
+                onToggleRegistering={() => {
+                    setIsRegistering((prev) => !prev);
+                    setError('');
+                }}
+                onSubmit={onSubmit}
+            />
+        )}
+    </div>
 }
 
 export default Login

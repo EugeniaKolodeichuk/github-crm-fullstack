@@ -78,7 +78,13 @@ exports.updateRepository = async (req, res) => {
 
 exports.deleteRepository = async (req, res) => {
     try {
-        await Repository.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+        const repo = await Repository.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+        if (!repo) return res.status(404).json({ msg: 'Repository not found' });
+
+        await User.findByIdAndUpdate(req.user._id, {
+            $addToSet: { deletedRepoId: repo.repoId }
+        });
+
         res.json({ msg: 'Deleted' });
     } catch (err) {
         res.status(500).json({ msg: 'Failed to delete repository', error: err.message });
@@ -103,6 +109,7 @@ async function syncReposInBackground(user) {
     try {
         const userInfo = await axios.get(`https://api.github.com/users/${user.githubUsername}`);
         const githubOwnerId = userInfo.data.id;
+        const deletedIds = user.deletedRepoId || [];
 
         if (!user.ownerId || user.ownerId !== githubOwnerId) {
             await User.findByIdAndUpdate(user._id, { ownerId: githubOwnerId });
@@ -120,6 +127,8 @@ async function syncReposInBackground(user) {
         }
 
         for (const repo of allRepos) {
+            if (deletedIds.includes(repo.id)) continue;
+
             await Repository.findOneAndUpdate(
                 { repoId: repo.id, user: user._id },
                 {
