@@ -18,7 +18,7 @@ const Home = () => {
 
     const fetchRepos = async () => {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/repositories', {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/repositories`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         setRepos(res.data);
@@ -26,7 +26,7 @@ const Home = () => {
 
     const handleUpdate = async (id: string) => {
         const token = localStorage.getItem('token');
-        await axios.put(`http://localhost:5000/api/repositories/${id}`, {}, {
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/repositories/${id}`, {}, {
             headers: { Authorization: `Bearer ${token}` },
         });
         fetchRepos();
@@ -34,7 +34,7 @@ const Home = () => {
 
     const handleDelete = async (id: string) => {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/repositories/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/repositories/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         setRepos((prev) => prev.filter((r) => r._id !== id));

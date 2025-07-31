@@ -45,8 +45,8 @@ const Login = () => {
 
         try {
             const url = isRegistering
-                ? 'http://localhost:5000/api/auth/register'
-                : 'http://localhost:5000/api/auth/login';
+                ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/register`
+                : `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`;
 
             const payload = isRegistering
                 ? { email, password, githubUsername }

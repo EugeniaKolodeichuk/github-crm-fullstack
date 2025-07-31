@@ -35,18 +35,6 @@
 - **Environment Variables (.env)**
 
 
-## Getting Started with Docker
-> Install Docker and Docker Compose
-> Clone this repository
-> Run 
-```
-docker-compose up --build
-```
-
-*frontend: React app (available at http://localhost:3000)*
-*backend: Express API (available at http://localhost:5000)*
-
-
 ## Environment Variables
 > Create a `.env` file in `server/` folder:
 ```
@@ -54,6 +42,27 @@ PORT=5000
 JWT_SECRET=
 MONGO_URI=
 ```
+
+> Create a `.env` file in `client/` folder:
+```
+VITE_API_BASE_URL=http://localhost:5000
+```
+
+
+## Getting Started with Docker
+> Install Docker and Docker Compose
+> Clone this repository
+
+> [!WARNING]
+> Before running add envs to client and server
+
+> Run 
+```
+docker-compose up --build
+```
+
+*frontend: React app (available at http://localhost:5173)*
+*backend: Express API (available at http://localhost:5000)*
 
 ## Access App
 > Register with email + GitHub username
